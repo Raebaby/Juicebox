@@ -130,7 +130,7 @@ async function createInitialPosts() {
     throw error;
   }
 }
-
+//
 async function rebuildDB() {
   try {
     client.connect();
