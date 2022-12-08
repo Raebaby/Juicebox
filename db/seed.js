@@ -16,6 +16,8 @@ async function dropTables() {
 
     // have to make sure to drop in correct order
     await client.query(`
+      DROP TABLE IF EXISTS post_tags;
+      DROP TABLE IF EXISTS tags;
       DROP TABLE IF EXISTS posts;
       DROP TABLE IF EXISTS users;
     `);
@@ -26,6 +28,7 @@ async function dropTables() {
     throw error;
   }
 }
+
 
 async function createTables() {
   try {
@@ -47,6 +50,15 @@ async function createTables() {
         content TEXT NOT NULL,
         active BOOLEAN DEFAULT true
       );
+      CREATE TABLE tags (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) UNIQUE NOT NULL
+      );
+      CREATE TABLE post_tags (
+        "postId" INTEGER REFERENCES posts(id),
+        "tagId" INTEGER REFERENCES tags(id),
+        UNIQUE ("postId", "tagId")
+      );
     `);
 
     console.log("Finished building tables!");
@@ -55,6 +67,7 @@ async function createTables() {
     throw error;
   }
 }
+
 
 async function createInitialUsers() {
   try {
