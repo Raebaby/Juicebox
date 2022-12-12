@@ -111,31 +111,49 @@ async function createPost({
   }
 }
 
-
-async function updatePost(id, fields = {}) {
-  // build the set string
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
-
-  // return early if this is called without fields
-  if (setString.length === 0) {
-    return;
-  }
-
+const updatePost = async (postId, fields = {}) => {
+  const {tags} = fields //Grab the tags from the fields you want to upset 
+  delete fields.tags; //Delete them from the field for whatever reason
+  let setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
+  
   try {
-    const { rows: [ post ] } = await client.query(`
+    if (setString ) {
+      await client.query(
+        `
       UPDATE posts
-      SET ${ setString }
-      WHERE id=${ id }
-      RETURNING *;
-    `, Object.values(fields));
+      SET ${setString}
+      WHERE id=${ postId }
+      RETURNING * ;
+      `,
+        Object.values(fields));
+        
+    }
+   
+      if ( tags === undefined ) {
+        return  await getPostById(postId)
+      }
+      const tagList = await createTags(tags)
+      const tagListIdString = tagList.map(tag => `${tag.id}`).join(', ')
 
-    return post;
+      await client.query(`
+      DELETE FROM post_tags
+      WHERE "tagId"
+      NOT IN (${ tagListIdString  })
+      AND "postId"=$1
+      `, [postId])
+      await addTagsToPost(postId, tagList);
+
+      const newPost = await getPostById(postId)
+      return newPost
+    
   } catch (error) {
+    console.log("There was an error updating users posts!");
     throw error;
   }
-}
+};
+
 
 const getAllPosts = async () => {
   
