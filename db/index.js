@@ -91,7 +91,8 @@ async function getUserById(userId) {
 async function createPost({
   authorId,
   title,
-  content
+  content,
+  tags = [] // this is new
 }) {
   try {
     const { rows: [ post ] } = await client.query(`
@@ -100,11 +101,16 @@ async function createPost({
       RETURNING *;
     `, [authorId, title, content]);
 
-    return post;
+    const tagList = await createTags(tags);
+
+    return await addTagsToPost(post.id, tagList);
+    console.log("rows: [post] from create post", post);
   } catch (error) {
+    console.log("There was an error creating the post")
     throw error;
   }
 }
+
 
 async function updatePost(id, fields = {}) {
   // build the set string
