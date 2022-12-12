@@ -131,32 +131,41 @@ async function updatePost(id, fields = {}) {
   }
 }
 
-async function getAllPosts() {
+const getAllPosts = async () => {
+  
   try {
-    const { rows } = await client.query(`
-      SELECT *
-      FROM posts;
+    const { rows: postIds } = await client.query(`
+    SELECT id
+    FROM posts;
     `);
-
-    return rows;
+    const posts = await Promise.all(
+      postIds.map((post) =>  getPostById(post.id))
+    );
+    console.log('All the posts here yo', posts)
+    return posts;
   } catch (error) {
+    console.log("There was an error getting all the posts");
     throw error;
   }
-}
+};
 
-async function getPostsByUser(userId) {
+const getPostsByUser = async (userId) => {
   try {
-    const { rows } = await client.query(`
-      SELECT * 
-      FROM posts
-      WHERE "authorId"=${ userId };
+    const { rows: postIds } = await client.query(`
+    SELECT id
+    FROM posts
+    WHERE "authorId"=${userId}
     `);
+    
+    const posts = await Promise.all(
+      postIds.map((post) => getPostById(post.id))
+    );
 
-    return rows;
+    return posts;
   } catch (error) {
-    throw error;
+    console.log("There was an error fetchings posts by user");
   }
-}
+};
 
 
 /*Tags*/
