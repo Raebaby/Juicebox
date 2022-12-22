@@ -9,6 +9,9 @@ server.use(morgan('dev')); // sets up of middleware functions with the ablility 
 
 server.use(express.json()) //// sets up of middleware functions with the ablility to use our express server and dependency 
 
+const { client } = require('./db'); //conncet client to server
+client.connect();
+
 server.listen (PORT, () => {
     console.log('The server is up on port', PORT)
 });

@@ -257,6 +257,16 @@ const getPostsByTagName = async (tagName) => {
   }
 }
 
+const getAllTags = async() => {
+  try{
+    const { rows } = await client.query(`SELECT * FROM tags;`)
+    return rows
+  }catch(error){
+    console.log('There was an error getting all tags')
+    throw(error)
+  }
+}
+
 async function addTagsToPost(postId, tagList) {
   try {
     const createPostTagPromises = tagList.map(
@@ -268,6 +278,8 @@ async function addTagsToPost(postId, tagList) {
     throw error;
   }
 }
+
+
 
 
 const getPostById = async (postId) => {
@@ -344,5 +356,6 @@ module.exports = {
   createTags,
   createPostTag,
   addTagsToPost,
-  getPostsByTagName
+  getPostsByTagName, 
+  getAllTags
 }
