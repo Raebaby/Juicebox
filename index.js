@@ -26,6 +26,8 @@ server.use((req, res, next) => {
 
 server.use('/api', apiRouter);
 
+
+
 // The method: get, post, patch, put, and delete, or method agnostic (use)
 // An optional request path that must be matched, e.g. /api/users, or even with a placeholder /api/users/:userId
 // A function with either three or four parameters

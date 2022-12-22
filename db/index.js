@@ -105,7 +105,7 @@ async function createPost({
     const tagList = await createTags(tags);
 
     return await addTagsToPost(post.id, tagList);
-    console.log("rows: [post] from create post", post);
+    
   } catch (error) {
     console.log("There was an error creating the post")
     throw error;
