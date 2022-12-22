@@ -343,7 +343,7 @@ const getPostById = async (postId) => {
 
 const getUserByUserName = async(username) => {
   try {
-    const {rows: [user]} = await client.query(`
+    const {rows: [user]} = await client.query(` 
     SELECT * FROM users
     WHERE username=$1;
     `, [username])

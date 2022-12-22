@@ -75,4 +75,31 @@ postsRouter.patch("/:postId", requireUser, async (req, res, next) => {
 
 
 
+
+postsRouter.delete("/:postsId", requireUser, async (req, res, next) => {
+  try {
+    const { postsId } = req.params;
+    const post = await getPostById(postsId);
+    if (post && post.author.id === req.user.id) {
+      console.log(post)
+      const updatedPost = await updatePost(post.id, { active: false });
+      res.send({ post: updatedPost });
+    } else {
+      console.log("Can't do that");
+      next(
+        post
+          ? {
+              name: "UnauthorizatedUserError",
+              message: "You cannot delete a post which is not yours",
+            }
+          : { name: "PostNotFoundError", message: "That post does not exist" }
+      );
+    }
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
+
+
+
 module.exports = postsRouter;
