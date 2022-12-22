@@ -1,8 +1,13 @@
 const PORT = 3000; 
 const express = require('express'); // Requires the Express module and puts it in a variable.
-const server = express();
-const apiRouter = require('./api');
+const server = express(); // gives our express function and stores it in a variable
+const apiRouter = require('./api'); // importing apiRouter function 
+const morgan = require('morgan'); //Import our morgan package/dependency that we installed 
 
+
+server.use(morgan('dev')); // sets up of middleware functions with the ablility to use out morgan dependency 
+
+server.use(express.json()) //// sets up of middleware functions with the ablility to use our express server and dependency 
 
 server.listen (PORT, () => {
     console.log('The server is up on port', PORT)
