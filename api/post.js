@@ -1,6 +1,6 @@
 const express = require('express');
 const postsRouter = express.Router();
-//const { requireUser } = require('./utils');
+const { requireUser } = require('./utils');
 const { getAllPosts } = require('../db');
 
 
@@ -27,21 +27,21 @@ postsRouter.get('/', async (req, res, next) => {
 
 
 
-// postsRouter.post('/', requireUser, async (req, res, next) => {
-//   const { title, content, tags = "" } = req.body;
-//   console.log()
-//   const tagArr = tags.trim().split(/\s+/)
-//   const postData = {};
+postsRouter.post('/', requireUser, async (req, res, next) => {
+  const { title, content, tags = "" } = req.body;
+  console.log()
+  const tagArr = tags.trim().split(/\s+/)
+  const postData = {};
 
-//   if (tagArr.length) {
-//     postData.tags = tagArr;
-//   }
+  if (tagArr.length) {
+    postData.tags = tagArr;
+  }
 
-//   try {
+  try {
     
-//   } catch ({ name, message }) {
-//     next({ name, message });
-//   }
-// });
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
+});
 
 module.exports = postsRouter;

@@ -64,6 +64,7 @@ async function getAllUsers() {
   }
 }
 
+
 async function getUserById(userId) {
   try {
     const { rows: [ user ] } = await client.query(`
@@ -340,7 +341,18 @@ const getPostById = async (postId) => {
 };
 
 
-
+const getUserByUserName = async(username) => {
+  try {
+    const {rows: [user]} = await client.query(`
+    SELECT * FROM users
+    WHERE username=$1;
+    `, [username])
+    return user
+  }catch(error) {
+    console.log("There was an error getting user by username")
+    throw error
+  }
+}
 
 
 module.exports = {  
@@ -357,5 +369,6 @@ module.exports = {
   createPostTag,
   addTagsToPost,
   getPostsByTagName, 
-  getAllTags
-}
+  getAllTags, 
+  getUserByUserName
+} 
