@@ -1,23 +1,22 @@
 const PORT = 3000; 
 const express = require('express'); // Requires the Express module and puts it in a variable.
 const server = express();
+const apiRouter = require('./api');
+
 
 server.listen (PORT, () => {
     console.log('The server is up on port', PORT)
 });
 
 server.use((req, res, next) => {
-    console.log("The body loggin is starting")
-    console.log(req.body)
-    console.log("The body logging has ended")
-
-        // the request object (built from the client's request)
-        // the response object (which has methods to build and send back a response)
-        // the next function, which will move forward to the next matching middleware
+    console.log("The body loggin is starting") // the request object (built from the client's request)
+    console.log(req.body)                      // the response object (which has methods to build and send back a response)
+    console.log("The body logging has ended")  // the next function, which will move forward to the next matching middleware
 
     next();
 });
 
+server.use('/api', apiRouter);
 
 // The method: get, post, patch, put, and delete, or method agnostic (use)
 // An optional request path that must be matched, e.g. /api/users, or even with a placeholder /api/users/:userId
